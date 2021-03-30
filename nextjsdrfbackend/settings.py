@@ -2,9 +2,7 @@ from datetime import timedelta
 from pathlib import Path
 from .secrets import DJANGO_SECRET_KEY, JWT_SECRET_KEY
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -17,7 +15,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -29,9 +26,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # third party
-    'rest_framework',
+    "rest_framework",
     'rest_framework.authtoken',
-    'corsheaders',
+    "corsheaders",
     'django.contrib.sites',
 
     # authentication
@@ -43,7 +40,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 
     # local
-    'nextjsdrfauth',
+    "nextjsdrfauth"
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -53,21 +50,24 @@ SOCIALACCOUNT_PROVIDERS = {
             'email',
         ],
         'AUTH_PARAMS': {
-            'access_type': 'online'
+            'access_type': 'online',
         }
     }
 }
 
-# Turning off email verification for now
-SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
+# we are turning off email verification for now
+SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
 SOCIALACCOUNT_EMAIL_REQUIRED = False
 
-# https://dj-rest-auth.readthedocs.io/en/latest/installation.html#registration-optional
-SITE_ID = 1
+SITE_ID = 1  # https://dj-rest-auth.readthedocs.io/en/latest/installation.html#registration-optional
 REST_USE_JWT = True  # use JSON Web Tokens
+# JWT_AUTH_COOKIE = "nextjsdrf-access-token"
+# JWT_AUTH_REFRESH_COOKIE = "nextjsdrf-refresh-token"
+# JWT_AUTH_SAMESITE = "none"
+
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -77,37 +77,39 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': True,
-    'USER_ID_FIELD': 'userId',  # for the customer user model
-    'USER_ID_CLAIM': 'user_id',
-    'SIGNING_KEY': JWT_SECRET_KEY
+    "USER_ID_FIELD": "userId",  # for the custom user model
+    "USER_ID_CLAIM": "user_id",
+    "SIGNING_KEY": JWT_SECRET_KEY
 }
 
-# ONLY FOR DEVELOPMENT! This should be changed before you push to production
+# only for dev environment!, this should be changed before you push to production
 CORS_ORIGIN_ALLOW_ALL = True
 
-# Custom user model, instead of using Django provided user model
-AUTH_USER_MODEL = 'nextjsdrfauth.CustomUserModel'
-
-# Need to specify the exact serializer for dj-rest-auth
+# custom user model, because we do not want to use the Django provided user model
+AUTH_USER_MODEL = "nextjsdrfauth.CustomUserModel"
+# We need to specify the exact serializer as well for dj-rest-auth, otherwise it will end up shooting itself
+# in the foot and me in the head
 REST_AUTH_SERIALIZERS = {
-    'USER_DETAILS_SERIALIZERS': 'nextjsdrfauth.serializers.CustomUserModelSerializer'
+    'USER_DETAILS_SERIALIZER': 'nextjsdrfauth.serializers.CustomUserModelSerializer'
 }
 
-# Set up the authentication classes
+# set up the authentication classes
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
     ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'dj_rest_auth.utils.JWTCookieAuthentication',
+
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "dj_rest_auth.utils.JWTCookieAuthentication",
     ),
 }
 

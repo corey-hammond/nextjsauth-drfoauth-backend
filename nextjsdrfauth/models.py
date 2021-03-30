@@ -2,11 +2,13 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from uuid import uuid4
 
+# Create your models here.
+
 
 class CustomUserModelManager(BaseUserManager):
     def create_user(self, username, email, password=None):
         """
-        Creates a custom user with the given fields
+          Creates a custom user with the given fields
         """
 
         user = self.model(
@@ -28,7 +30,7 @@ class CustomUserModelManager(BaseUserManager):
 
         user.is_staff = True
         user.is_superuser = True
-        user.save(using=self.db)
+        user.save(using=self._db)
 
         return user
 
@@ -41,8 +43,8 @@ class CustomUserModel(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         max_length=100, unique=True, null=False, blank=False)
 
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ["email"]
 
     active = models.BooleanField(default=True)
 
@@ -55,4 +57,4 @@ class CustomUserModel(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserModelManager()
 
     class Meta:
-        verbose_name = 'Customer User'
+        verbose_name = "Custom User"
